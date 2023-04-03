@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Controller;
+use ApiPlatform\Metadata\ApiResource;
 use App\Entity\BlogPost;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

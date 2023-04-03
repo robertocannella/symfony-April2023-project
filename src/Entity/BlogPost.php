@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\BlogPostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BlogPostRepository::class)]
+#[ApiResource]
 class BlogPost
 {
     #[ORM\Id]
@@ -23,8 +25,9 @@ class BlogPost
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $author = null;
+    #[ORM\ManyToOne(targetEntity: 'App\Entity\User',inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private User $author;
 
     #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
@@ -70,18 +73,6 @@ class BlogPost
         return $this;
     }
 
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(string $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -92,5 +83,23 @@ class BlogPost
         $this->slug = $slug;
 
         return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getAuthor(): User
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param User $author
+     */
+    public function setAuthor(User $author): self
+    {
+        $this->author = $author;
+
+        return $this;  // Allows chaining
     }
 }
