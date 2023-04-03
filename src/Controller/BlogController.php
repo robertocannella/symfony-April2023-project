@@ -3,6 +3,7 @@
 namespace App\Controller;
 use App\Entity\BlogPost;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,23 +36,22 @@ class BlogController extends \Symfony\Bundle\FrameworkBundle\Controller\Abstract
         ],200);
     }
     /**
-     * @Route ("/post/{id}", name="app_blog_post", requirements={"id"="\d+"})
+     * @Route ("/post/{id}", methods={"GET"}, name="app_blog_post", requirements={"id"="\d+"})
      */
-    public function post($id):JsonResponse {
-        $blogPost = $this->em->getRepository(BlogPost::class)->find($id);
+    public function post(BlogPost $post):JsonResponse {
+
         return $this->json([
-            'data' => $blogPost
+            'data' => $post
         ],200);
     }
     /**
-     * @Route ("/post/{slug}", name="app_blog_postbyslug")
+     * @Route ("/post/{slug}", name="app_blog_postbyslug", methods={"GET"})
      */
-    public function postBySlug($slug):JsonResponse {
-        $blogPost = $this->em->getRepository(BlogPost::class)->findOneBy(['slug' => $slug]);
+    public function postBySlug(BlogPost $post):JsonResponse {
 
-        return $this->json([
-            'data' => $blogPost
-        ]);
+        // $this->em->getRepository(BlogPost::class)->findOneBy(['slug' => $slug]);
+
+        return $this->json(['data' => $post],200);
     }
 
     /**
@@ -66,6 +66,19 @@ class BlogController extends \Symfony\Bundle\FrameworkBundle\Controller\Abstract
         return $this->json([
             'data' => $blogPost
         ]);
+    }
+
+    /**
+     * @Route ("/post/{id}", name="app_blog_delete", methods={"DELETE"})
+     */
+
+    public function delete(BlogPost $id): JsonResponse
+    {
+        $blogPost = $this->em->getRepository(BlogPost::class)->find($id);
+        $this->em->remove($blogPost);
+        $this->em->flush();
+
+        return $this->json(null, 200);
     }
 
 }
