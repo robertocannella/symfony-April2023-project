@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\BlogPostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,8 +30,25 @@ class BlogPost
     #[ORM\JoinColumn(nullable: false)]
     private User $author;
 
+    #[ORM\OneToMany(mappedBy: 'blogPost', targetEntity: 'App\Entity\Comment')]
+    #[ORM\JoinColumn(nullable: false)]
+    private  $comments;
+
     #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getComments(): ArrayCollection
+    {
+        return $this->comments;
+    }
 
     public function getId(): ?int
     {

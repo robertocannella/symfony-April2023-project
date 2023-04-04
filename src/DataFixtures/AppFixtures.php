@@ -58,6 +58,8 @@ class AppFixtures extends Fixture
                     $comment->setAuthor($this->getReference("user_id_$randUserId"));
                     $comment->setContent($this->faker->realText());
                     $comment->setPublished($this->faker->dateTimeBetween('-100 days','-1 days'));
+                    $comment->setBlogPost($this->getReference("blog_post_id_$randPostId"));
+
 
                     $manager->persist($comment);
                 }
