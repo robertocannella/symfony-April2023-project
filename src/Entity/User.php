@@ -5,7 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Collection\CollectionInterface;
 use phpDocumentor\Reflection\DocBlock\Tags\Author;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -101,17 +103,17 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getComments(): ArrayCollection
+    public function getComments(): Collection
     {
         return $this->comments;
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getPosts(): ArrayCollection
+    public function getPosts(): Collection
     {
         return $this->posts;
     }

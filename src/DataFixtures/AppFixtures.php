@@ -5,10 +5,13 @@ namespace App\DataFixtures;
 use App\Entity\BlogPost;
 use App\Entity\Comment;
 use App\Entity\User;
+use App\Factory\BlogPostFactory;
+use App\Factory\CommentFactory;
+use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
-use Faker\Generator;
+//use Faker\Factory;
+//use Faker\Generator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -19,27 +22,31 @@ class AppFixtures extends Fixture
     protected Generator $faker;
     public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
-        $this->faker = Factory::create();
+       // $this->faker = Factory::create();
     }
 
     public function load(ObjectManager $manager): void
     {
-        $this->loadUsers($manager);
-        $this->loadBlogPosts($manager);
-        $this->loadComments($manager);
+        UserFactory::createMany(10);
+        BlogPostFactory::createMany(100);
+        CommentFactory::createMany(200);
+//        $this->loadUsers($manager);
+//        $this->loadBlogPosts($manager);
+//        $this->loadComments($manager);
 
     }
     public function loadBlogPosts(ObjectManager $manager){
-        $user = $this->getReference('user_admin');
+        $user = $this->getReference('user_id_10');
 
 
         for ($i=0;$i<100;++$i){
+            $randUserId = rand(0, 10);
             $blogPost = new BlogPost();
-            $blogPost->setTitle($this->faker->realText(30));
-            $blogPost->setPublished($this->faker->dateTimeBetween('-100 days','-1 days'));
-            $blogPost->setContent($this->faker->paragraph(1));
-            $blogPost->setAuthor($user);
-            $blogPost->setSlug($this->faker->slug());
+            $blogPost->setTitle($this->faker->realText(30))
+                     ->setPublished($this->faker->dateTimeBetween('-100 days','-1 days'))
+                     ->setContent($this->faker->paragraph(1))
+                     ->setAuthor($this->getReference("user_id_$randUserId"))
+                     ->setSlug($this->faker->slug());
 
             $this->setReference("blog_post_id_$i",$blogPost);
             $manager->persist($blogPost);
@@ -51,7 +58,7 @@ class AppFixtures extends Fixture
             for ($i=0; $i<100; ++$i){
                 $numComments = rand(1,10);
                 for ($j=0; $j<$numComments; ++$j) {
-                    $randUserId = rand(0, 9);
+                    $randUserId = rand(0, 10);
                     $randPostId = rand(0, 99);
 
                     $comment = new Comment();
@@ -77,7 +84,7 @@ class AppFixtures extends Fixture
         );
         $user->setPassword($hashedPassword);
 
-        $this->addReference('user_admin', $user);
+        $this->addReference('user_id_10', $user);
         $manager->persist($user);
 
         for ($i=0;$i<10;++$i){
