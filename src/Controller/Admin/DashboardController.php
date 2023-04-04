@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\BlogPost;
+use App\Entity\Comment;
+use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -18,7 +20,7 @@ class DashboardController extends AbstractDashboardController
     {
         //return parent::index();
 
-        return $this->render('admin/index.html.twig');
+
         // Option 1. You can make your dashboard redirect to some common page of your backend
         //
         // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
@@ -33,6 +35,8 @@ class DashboardController extends AbstractDashboardController
         // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
+        return $this->render('admin/index.html.twig');
+
         // return $this->render('some/path/my-dashboard.html.twig');
     }
 
@@ -46,7 +50,9 @@ class DashboardController extends AbstractDashboardController
     {
 
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('BlogPost', 'fa fa-file-text',BlogPost::class);
+        yield MenuItem::linkToCrud('Posts', 'fa fa-file-text',BlogPost::class);
+        yield MenuItem::linkToCrud('Comments', 'fa fa-comment',Comment::class);
+        yield MenuItem::linkToCrud('Users', 'fa fa-user',User::class);
         //yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 }
